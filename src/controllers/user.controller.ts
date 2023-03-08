@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { User } from "../models";
-import { ICommonResponse, IRequestWithUser, IUser } from "../types";
+import { IUser } from "../types";
 
 class UserController {
   public async getAll(
@@ -18,12 +18,13 @@ class UserController {
   }
 
   public async getById(
-    req: IRequestWithUser,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response<IUser>> {
     try {
-      return res.json(req.user);
+      const { user } = res.locals;
+      return res.json(user);
     } catch (e) {
       next(e);
     }
@@ -33,13 +34,10 @@ class UserController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response<ICommonResponse<IUser>>> {
+  ): Promise<Response<IUser>> {
     try {
       const user = await User.create(req.body);
-      return res.status(201).json({
-        message: "User has been created",
-        data: user,
-      });
+      return res.status(201).json(user);
     } catch (e) {
       next(e);
     }
@@ -49,28 +47,29 @@ class UserController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response<ICommonResponse<IUser>>> {
+  ): Promise<Response<IUser>> {
     try {
       const { pk } = req.params;
-      const updatedUser = await User.findByIdAndUpdate(pk, { ...req.body });
+      const updatedUser = await User.findByIdAndUpdate(
+        pk,
+        { ...req.body },
+        { new: true }
+      );
 
-      return res.json({
-        message: "User has been updated",
-        data: updatedUser,
-      });
+      return res.json(updatedUser);
     } catch (e) {
       next(e);
     }
   }
 
   public async delete(
-    req: IRequestWithUser,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<Response> {
     try {
-      const user = req.user;
-      await User.deleteOne(user);
+      const { pk } = req.params;
+      await User.findByIdAndDelete(pk);
       return res.sendStatus(204);
     } catch (e) {
       next(e);

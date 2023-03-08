@@ -11,7 +11,6 @@ const userSchema = new Schema({
     lowercase: true,
   },
   name: { type: String },
-  age: { type: Number },
   password: { type: String, require: true },
   gender: { type: String, enum: EGenders },
 });
