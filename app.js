@@ -1,72 +1,34 @@
-// -- MODULES --
-// const {sayHello} = require('./helper')
-//
-// sayHello()
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
-// -- GLOBAL VARIABLES --
-// console.log(__dirname)
-// console.log(__filename)
-// console.log(process.cwd())
 
-// -- PATH --
-// const path = require('node:path')
-//
-// const joinedPath = path.join(__dirname, 'test')
-// const joinedPath = path.normalize('//test/////')
-// const joinedPath = path.resolve('test')
-// console.log(joinedPath)
+const worker = async () => {
+    try {
+        const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt']
+        const folderNames = ['folder1.txt', 'folder2.txt', 'folder3.txt', 'folder4.txt']
 
-// -- OS --
-// const os = require('os')
-//
-// console.log(os.arch());
-// console.log(os.cpus());
+        await Promise.all(folderNames.map(async (folderName, index) => {
+                const folderPath = path.join(process.cwd(), folderName)
 
-// -- FS --
-// const fs = require('node:fs')
-// const path = require('node:path')
-//
-// fs.writeFile(path.join('test.txt'), 'Hello World', (err) => {
-//     if (err) throw new Error(err.message)
-// })
-//
-// fs.readFile(path.join(__dirname, 'target'), (err, data) => {
-//     if (err) throw new Error(err.message)
-//     console.log(data)
-// })
-//
-// fs.appendFile(path.join('target'), '\nNew ', (err)=>{
-//     if (err) throw new Error(err.message)
-// })
-//
-//  -- clear
-// fs.truncate(path.join('target'), (err) => {
-//     if (err) throw new Error(err.message)
-// })
-//
-// -- remove
-// fs.unlink(path.join('target'), (err) => {
-//     if (err) throw new Error(err.message)
-// })
-//
-// fs.readdir(path.join('test'), (err, data) => {
-//     if (err) throw new Error(err.message)
-//     console.log(data)
-// })
-//
-// fs.readdir(path.join('test'), {withFileTypes: true}, (err, data) => {
-//     if (err) throw new Error(err.message)
-//     data.forEach(file => {
-//         file.isFile()
-//     })
-// })
-//
-// fs.stat(path.join('test'), (err, stats) => {
-//     if (err) throw new Error(err.message)
-//     console.log(stats.isDirectory())
-//     console.log(stats.isFile())
-// })
-//
-// fs.mkdir(path.join('test'), (err) => {
-//     if (err) throw new Error(err.message)
-// })
+                await fs.mkdir(folderPath, {recursive: true})
+                await fs.writeFile(path.join(folderName, fileNames[index]), 'Hello world')
+            })
+        )
+
+        const files = await fs.readdir(path.join(process.cwd()))
+        for (const file of files) {
+            const stats = await fs.stat(path.join(process.cwd(), file));
+            const isFile = stats.isFile()
+
+            isFile
+                ? console.log('This is file', path.join(process.cwd(), file))
+                : console.log('This is directory', path.join(process.cwd(), file))
+        }
+
+    } catch
+        (e) {
+        console.error(e.message)
+    }
+}
+
+worker().then()
