@@ -1,34 +1,49 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
+const express = require('express');
 
+const app = express();
+const PORT = 5000
 
-const worker = async () => {
-    try {
-        const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt']
-        const folderNames = ['folder1.txt', 'folder2.txt', 'folder3.txt', 'folder4.txt']
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-        await Promise.all(folderNames.map(async (folderName, index) => {
-                const folderPath = path.join(process.cwd(), folderName)
+const users = [
+    { name: 'sasha', age: 19 },
+    { name: 'max', age: 29 },
+    { name: 'ina', age: 39 },
+]
 
-                await fs.mkdir(folderPath, {recursive: true})
-                await fs.writeFile(path.join(folderName, fileNames[index]), 'Hello world')
-            })
-        )
+app.get('/users', (req, res) => {
+    res.status(200).json(users)
+});
 
-        const files = await fs.readdir(path.join(process.cwd()))
-        for (const file of files) {
-            const stats = await fs.stat(path.join(process.cwd(), file));
-            const isFile = stats.isFile()
+app.get('/users/:userId', (req, res) => {
+    const { userId } = req.params;
+    res.status(200).json(users[+userId])
+});
 
-            isFile
-                ? console.log('This is file', path.join(process.cwd(), file))
-                : console.log('This is directory', path.join(process.cwd(), file))
-        }
+app.post('/users', (req, res) => {
+    const data = req.body;
 
-    } catch
-        (e) {
-        console.error(e.message)
-    }
-}
+    users.push(data)
+    res.status(201).json({
+        message: 'User Created'
+    })
+})
 
-worker().then()
+app.put('/users/userId', (req, res) => {
+    const { userId } = req.params;
+    const updatedUser = req.body;
+
+    users[+userId] = updatedUser;
+    res.json(users[+userId])
+})
+
+app.delete('/users/userId', (req, res) => {
+    const {userId} = req.params;
+    users.splice(+userId, 1)
+    res.status(204)
+})
+
+app.listen(PORT, () => {
+    console.log('Server has started on port ' + PORT)
+});
