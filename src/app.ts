@@ -18,7 +18,8 @@ app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
   return res.status(status).json({ message: err.message });
 });
 
-app.listen(configs.PORT, () => {
-  mongoose.connect(configs.DB_URL);
+app.listen(configs.PORT, async () => {
+  await mongoose.connect(configs.DB_URL);
+  // eslint-disable-next-line no-console
   console.log("Server has started on port " + configs.PORT);
 });
