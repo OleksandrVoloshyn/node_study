@@ -1,21 +1,22 @@
 import { Router } from "express";
 
 import { userController } from "../controllers";
-import { userMiddleware } from "../middlewares/user.middleware";
+import { authMiddleware, userMiddleware } from "../middlewares";
 
 const router = Router();
 
 router.get("/", userController.getAll);
-router.post("/", userMiddleware.isValidCreate, userController.create);
 
 router.get(
   "/:userId",
+  authMiddleware.checkAccessToken,
   userMiddleware.isValidId,
   userMiddleware.getByIdOrThrow,
   userController.getById
 );
 router.patch(
   "/:userId",
+  authMiddleware.checkAccessToken,
   userMiddleware.isValidId,
   userMiddleware.isValidUpdate,
   userMiddleware.getByIdOrThrow,
@@ -23,6 +24,7 @@ router.patch(
 );
 router.delete(
   "/:userId",
+  authMiddleware.checkAccessToken,
   userMiddleware.isValidId,
   userMiddleware.getByIdOrThrow,
   userController.delete
