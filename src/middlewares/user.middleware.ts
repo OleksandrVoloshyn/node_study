@@ -4,6 +4,7 @@ import { isObjectIdOrHexString } from "mongoose";
 import { ApiError } from "../errors";
 import { User } from "../models";
 import { UserValidator } from "../validators";
+
 // import { IUser } from "../types";
 
 class UserMiddleware {
@@ -130,6 +131,21 @@ class UserMiddleware {
       const { userId } = req.params;
       if (!isObjectIdOrHexString(userId))
         return next(new ApiError("ID is not valid", 400));
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async isValidChangePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { error } = UserValidator.changeUserPassword.validate(req.body);
+      if (error) return next(new ApiError(error.message, 400));
+
       next();
     } catch (e) {
       next(e);
