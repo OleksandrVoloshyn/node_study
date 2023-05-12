@@ -1,11 +1,8 @@
-export enum EMailActions {
-  // eslint-disable-next-line no-unused-vars
-  WELCOME,
-  // eslint-disable-next-line no-unused-vars
-  FORGOT_PASSWORD,
-}
+import { EMailActions } from "../enums";
 
-export const allTemplates = {
+export const allTemplates: {
+  [key: string]: { subject: string; templateName: string };
+} = {
   [EMailActions.WELCOME]: {
     subject: "WELCOME",
     templateName: "register",
