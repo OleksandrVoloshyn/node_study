@@ -65,7 +65,7 @@ class AuthMiddleware {
       } catch (e) {
         next(e);
       }
-    }
+    };
   }
 }
 

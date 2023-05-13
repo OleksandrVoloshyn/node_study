@@ -1,13 +1,13 @@
 import { Router } from "express";
 
 import { authController } from "../controllers";
+import { EActionTokenType } from "../enums";
 import {
   authMiddleware,
   commonMiddleware,
   userMiddleware,
 } from "../middlewares";
 import { UserValidator } from "../validators";
-import { EActionTokenType } from "../enums";
 
 const router = Router();
 

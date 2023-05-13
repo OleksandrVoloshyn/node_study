@@ -1,4 +1,9 @@
-import { EActionTokenType, EMailActions, ESmsActionsEnum, EUserStatus } from "../enums";
+import {
+  EActionTokenType,
+  EMailActions,
+  ESmsActionsEnum,
+  EUserStatus,
+} from "../enums";
 import { ApiError } from "../errors";
 import { Action, Token, User } from "../models";
 import { ICredentials, ITokenPair, ITokenPayload, IUser } from "../types";
