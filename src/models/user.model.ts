@@ -14,6 +14,10 @@ const userSchema = new Schema(
     },
     password: { type: String, required: [true, "Password is required"] },
     gender: { type: String, enum: EGenders },
+    isActivated: {
+      type: Boolean,
+      default: false,
+    },
   },
   { versionKey: false, timestamps: true }
 );

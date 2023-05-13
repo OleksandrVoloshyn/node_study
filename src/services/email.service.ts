@@ -36,9 +36,19 @@ class EmailService {
     });
   }
 
-  public async sendMail(email: string, emailAction: EMailActions) {
+  public async sendMail(
+    email: string,
+    emailAction: EMailActions,
+    locals: Record<string, string> = {}
+  ) {
     const templateInfo = allTemplates[emailAction];
-    const html = await this.templateParser.render(templateInfo.templateName);
+    locals.frontUrl = configs.FRONT_URL;
+
+    const html = await this.templateParser.render(
+      templateInfo.templateName,
+      locals
+    );
+
     return this.transporter.sendMail({
       from: "No reply",
       to: email,
