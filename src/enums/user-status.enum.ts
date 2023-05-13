@@ -1,8 +1,8 @@
-export enum EMailActions {
+export enum EUserStatus {
   // eslint-disable-next-line no-unused-vars
-  WELCOME,
+  active = "active",
   // eslint-disable-next-line no-unused-vars
-  FORGOT_PASSWORD,
+  inactive = "inactive",
   // eslint-disable-next-line no-unused-vars
-  ACTIVATE,
+  blocked = "blocked",
 }

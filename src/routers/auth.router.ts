@@ -7,6 +7,7 @@ import {
   userMiddleware,
 } from "../middlewares";
 import { UserValidator } from "../validators";
+import { EActionTokenType } from "../enums";
 
 const router = Router();
 
@@ -31,16 +32,23 @@ router.post(
   authController.changePassword
 );
 
+router.put(
+  `/password/forgot/:token`,
+  authMiddleware.checkActionToken(EActionTokenType.forgot),
+  authController.setForgotPassword
+);
+
 router.post(
-  "/password/forgot",
+  "/activate",
+  commonMiddleware.isBodyValid(UserValidator.emailValidator),
   userMiddleware.getDynamicallyOrThrow("email"),
-  authController.forgotPassword
+  authController.sendActivateToken
 );
 
 router.put(
-  `/password/forgot/:token`,
-  authMiddleware.checkActionForgotToken,
-  authController.setForgotPassword
+  `/activate/:token`,
+  authMiddleware.checkActionToken(EActionTokenType.activate),
+  authController.activate
 );
 
 router.post(

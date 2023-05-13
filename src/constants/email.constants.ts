@@ -11,4 +11,8 @@ export const allTemplates: {
     subject: "Forgot Password",
     templateName: "forgotPassword",
   },
+  [EMailActions.ACTIVATE]: {
+    subject: "Activate!",
+    templateName: "activate",
+  },
 };
