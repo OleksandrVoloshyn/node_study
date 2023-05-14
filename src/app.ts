@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
 
-import { configs } from "./configs/configs";
+import { configs } from "./configs";
+import { cronRunner } from "./crons";
 import { authRouter, userRouter } from "./routers";
 import { IError } from "./types";
 
@@ -22,6 +23,7 @@ app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
 
 app.listen(configs.PORT, async () => {
   await mongoose.connect(configs.DB_URL);
+  cronRunner();
   // eslint-disable-next-line no-console
   console.log("Server has started on port " + configs.PORT);
 });
