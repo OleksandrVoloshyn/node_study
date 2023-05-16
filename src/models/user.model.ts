@@ -4,7 +4,7 @@ import { EGenders, EUserStatus } from "../enums";
 
 const userSchema = new Schema(
   {
-    name: { type: String },
+    name: { type: String, index: true },
     email: {
       type: String,
       unique: true,

@@ -5,4 +5,6 @@ export enum EMailActions {
   FORGOT_PASSWORD,
   // eslint-disable-next-line no-unused-vars
   ACTIVATE,
+  // eslint-disable-next-line no-unused-vars
+  REMINDER,
 }
