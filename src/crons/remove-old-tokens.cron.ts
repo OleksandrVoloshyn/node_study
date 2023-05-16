@@ -2,8 +2,8 @@ import { CronJob } from "cron";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
-import { Token, User } from "../models";
 import { EMailActions } from "../enums";
+import { Token, User } from "../models";
 import { emailService } from "../services";
 
 dayjs.extend(utc);
