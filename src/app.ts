@@ -3,7 +3,7 @@ import * as mongoose from "mongoose";
 
 import { configs } from "./configs";
 import { cronRunner } from "./crons";
-import { authRouter, userRouter } from "./routers";
+import { authRouter, carRouter, userRouter } from "./routers";
 import { IError } from "./types";
 
 const app = express();
@@ -11,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/cars", carRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
