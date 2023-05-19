@@ -22,10 +22,7 @@ class CommonMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
         const { error, value } = validator.validate(req.body);
-
-        if (error) {
-          next(new ApiError(error.message, 400));
-        }
+        if (error) return next(new ApiError(error.message, 400));
 
         req.body = value;
         next();

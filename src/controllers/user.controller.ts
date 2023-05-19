@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
-import { User } from "../models";
+import { userMapper } from "../mappers";
 import { IQuery, userService } from "../services";
 import { IUser } from "../types";
 
@@ -12,7 +13,7 @@ class UserController {
   ): Promise<Response<IUser[]>> {
     try {
       const users = await userService.getWithPagination(
-        req.query as unknown /* я хз шо це таке */ as IQuery
+        req.query as unknown /* хз шо це таке */ as IQuery
       );
       return res.status(200).json(users);
     } catch (e) {
@@ -26,21 +27,10 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser>> {
     try {
-      const user = req.res.locals.user;
-      return res.status(200).json(user);
-    } catch (e) {
-      next(e);
-    }
-  }
+      const { user } = res.locals;
+      const response = userMapper.toResponse(user);
 
-  public async create(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response<IUser>> {
-    try {
-      const user = await User.create({ ...req.body });
-      return res.status(201).json(user);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -52,12 +42,11 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser>> {
     try {
-      const { userId } = req.params;
-      const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-        new: true,
-      });
+      const { params, body } = req;
+      const updatedUser = await userService.update(params.userId, body);
 
-      return res.status(200).json(updatedUser);
+      const response = userMapper.toResponse(updatedUser);
+      return res.status(201).json(response);
     } catch (e) {
       next(e);
     }
@@ -71,8 +60,41 @@ class UserController {
     try {
       const { userId } = req.params;
 
-      await User.deleteOne({ _id: userId });
+      await userService.delete(userId);
       return res.sendStatus(204);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async uploadAvatar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<IUser>> {
+    try {
+      const userEntity = res.locals.user as IUser;
+      const avatar = req.files.avatar as UploadedFile;
+      const user = await userService.uploadAvatar(avatar, userEntity);
+
+      const response = userMapper.toResponse(user);
+      return res.status(201).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async deleteAvatar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<IUser>> {
+    try {
+      const userEntity = res.locals.user as IUser;
+      const user = await userService.deleteAvatar(userEntity);
+
+      const response = userMapper.toResponse(user);
+      return res.status(201).json(response);
     } catch (e) {
       next(e);
     }

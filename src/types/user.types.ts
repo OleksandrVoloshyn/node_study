@@ -7,6 +7,7 @@ export interface IUser {
   password: string;
   gender: string;
   age: number;
+  avatar?: string;
   phone?: string;
 }
 
@@ -20,6 +21,5 @@ export interface IUserVirtuals {
 
 export interface IUserModel
   extends Model<IUser, object, IUserMethods, IUserVirtuals> {
-  // eslint-disable-next-line no-unused-vars
   findByName(name: string): Promise<IUser[]>;
 }

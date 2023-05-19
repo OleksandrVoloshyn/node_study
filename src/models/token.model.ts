@@ -10,6 +10,7 @@ const tokenSchema = new Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 

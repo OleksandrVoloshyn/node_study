@@ -23,7 +23,6 @@ class SmsService {
         messagingServiceSid: configs.TWILIO_SERVICE_SID,
       });
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e.message);
     }
   }

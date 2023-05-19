@@ -55,7 +55,7 @@ class AuthController {
         newPassword
       );
 
-      return res.sendStatus(200);
+      res.sendStatus(200);
     } catch (e) {
       next(e);
     }
@@ -85,7 +85,11 @@ class AuthController {
       const { password } = req.body;
       const { tokenInfo } = req.res.locals;
 
-      await authService.setForgotPassword(password, tokenInfo._user_id);
+      await authService.setForgotPassword(
+        password,
+        tokenInfo._user_id,
+        req.params.token
+      );
 
       res.sendStatus(200);
     } catch (e) {

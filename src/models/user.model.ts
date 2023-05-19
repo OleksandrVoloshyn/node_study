@@ -14,7 +14,9 @@ const userSchema = new Schema(
       lowercase: true,
     },
     password: { type: String, required: [true, "Password is required"] },
+    age: { type: Number, required: false },
     gender: { type: String, enum: EGenders },
+    avatar: { type: String, required: false },
     status: {
       type: String,
       enum: EUserStatus,

@@ -32,6 +32,13 @@ router.post(
   authController.changePassword
 );
 
+router.post(
+  "/password/forgot",
+  commonMiddleware.isBodyValid(UserValidator.emailValidator),
+  userMiddleware.getDynamicallyOrThrow("email"),
+  authController.forgotPassword
+);
+
 router.put(
   `/password/forgot/:token`,
   authMiddleware.checkActionToken(EActionTokenType.forgot),
